@@ -20,6 +20,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->timestamp("published_at")->nullable();
+            $table->foreignId("category_id");
         });
     }
 
@@ -28,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('posts');
+        Schema::dropIfExists("posts");
     }
 };
