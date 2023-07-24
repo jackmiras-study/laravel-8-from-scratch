@@ -20,8 +20,8 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('post/{post}', function ($slug) {
+Route::get('post/{post:slug}', function (Post $post) {
     return view('post', [
-        'post' => Post::findOrFail($slug),
+        'post' => $post,
     ]);
 });
