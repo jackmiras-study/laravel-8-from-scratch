@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create("posts", function (Blueprint $table) {
             $table->id();
+            $table->foreignId("user_id");
+            $table->foreignId("category_id");
             $table->string("title");
             $table->string("slug")->unique();
             $table->text("excerpt");
@@ -20,7 +22,6 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
             $table->timestamp("published_at")->nullable();
-            $table->foreignId("category_id");
         });
     }
 
