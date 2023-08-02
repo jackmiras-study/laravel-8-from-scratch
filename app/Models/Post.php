@@ -37,9 +37,16 @@ class Post extends Model
 
         $query->when(
             key_exists("category", $filters),
-            fn($query, $category) =>
+            fn($query) =>
                 $query->whereHas("category",fn($query) =>
-                    $query->where("slug", $category))
+                    $query->where("slug", $filters['category']))
+            );
+
+        $query->when(
+            key_exists("author", $filters),
+            fn($query) =>
+                $query->whereHas("author",fn($query) =>
+                    $query->where("username", $filters['author']))
             );
 
         return $query;
