@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -25,15 +26,24 @@ class Post extends Model
         "author",
     ];
 
-public function scopeFilter(Builder $query, array $filters): Builder
-{
-    return $query->when(
-        key_exists("search", $filters),
-        fn($query, $search) => $query
-            ->where("title", "like", "%{$search}%")
-            ->where("body", "like", "%{$search}%")
-    );
-}
+    public function scopeFilter(Builder $query, array $filters): Builder
+    {
+        $query->when(
+            key_exists("search", $filters),
+            fn($query) => $query
+                ->where("title", "like", "%{$filters['search']}%")
+                ->orWhere("body", "like", "%{$filters['search']}%")
+        );
+
+        $query->when(
+            key_exists("category", $filters),
+            fn($query, $category) =>
+                $query->whereHas("category",fn($query) =>
+                    $query->where("slug", $category))
+            );
+
+        return $query;
+    }
 
     public function category(): BelongsTo
     {
