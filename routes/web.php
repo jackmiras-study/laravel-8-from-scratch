@@ -15,3 +15,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get("/", "PostController@index")->name("home");
 Route::get("posts/{post:slug}", "PostController@show");
+
+Route::get('register', 'RegisterController@create');
+Route::post('register', 'RegisterController@store');
