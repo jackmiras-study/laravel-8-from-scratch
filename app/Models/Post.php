@@ -30,9 +30,10 @@ class Post extends Model
     {
         $query->when(
             key_exists("search", $filters),
-            fn($query) => $query
-                ->where("title", "like", "%{$filters['search']}%")
+            fn($query) => $query->where(fn($query) =>
+                $query->where("title", "like", "%{$filters['search']}%")
                 ->orWhere("body", "like", "%{$filters['search']}%")
+            )
         );
 
         $query->when(
