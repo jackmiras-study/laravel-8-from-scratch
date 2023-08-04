@@ -16,7 +16,10 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", "PostController@index")->name("home");
 Route::get("posts/{post:slug}", "PostController@show");
 
-Route::get('register', 'RegisterController@create')->middleware("guest");
-Route::post('register', 'RegisterController@store')->middleware("guest");
+Route::get("register", "RegisterController@create")->middleware("guest");
+Route::post("register", "RegisterController@store")->middleware("guest");
 
-Route::post('logout', 'SessionsController@destroy');
+Route::get("login", "SessionsController@create")->middleware("guest");
+Route::post("login", "SessionsController@store")->middleware("guest");
+
+Route::post("logout", "SessionsController@destroy")->middleware("auth");
