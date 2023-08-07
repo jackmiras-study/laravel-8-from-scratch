@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use MailchimpMarketing\ApiClient;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +13,24 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('ping', function() {
+$mailchimp = new ApiClient();
+
+$mailchimp->setConfig([
+	'apiKey' => config("services.mailchimp.key"),
+	'server' => 'us21',
+]);
+
+// $response = $mailchimp->ping->get();
+// $response = $mailchimp->lists->getAllLists();
+$response = $mailchimp->lists->addListMember("520e1ec5e1", [
+    "email_address" => "resourznet.brasil@gmail.com",
+    "status" => "subscribed",
+]);
+
+dd($response);
+});
 
 Route::get("/", "PostController@index")->name("home");
 
