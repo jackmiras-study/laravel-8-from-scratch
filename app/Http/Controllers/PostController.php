@@ -3,8 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Post;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
@@ -23,5 +23,10 @@ class PostController extends Controller
         return view("posts.show", [
             "post" => $post,
         ]);
+    }
+
+    public function create(): View
+    {
+        return view("posts.create");
     }
 }
