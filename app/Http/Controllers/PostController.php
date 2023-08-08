@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class PostController extends Controller
 {
@@ -16,6 +17,23 @@ class PostController extends Controller
                 ->paginate(6)
                 ->withQueryString(),
         ]);
+    }
+
+    public function store(Request $request): Response
+    {
+        $attributes = $request->validate([
+            "title" => "required",
+            "slug" => "required|unique:posts,slug",
+            "excerpt" => "required",
+            "body" => "required",
+            "category_id" => "required|exists:categories,id",
+        ]);
+
+        $attributes['user_id'] = auth()->id();
+
+        Post::create($attributes);
+
+        return redirect("/");
     }
 
     public function show(Post $post): View

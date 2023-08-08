@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Str;
 
 class Post extends Model
 {
@@ -16,6 +15,8 @@ class Post extends Model
     use SoftDeletes;
 
     protected $fillable = [
+        "user_id",
+        "category_id",
         "title",
         "slug",
         "excerpt",
