@@ -7,9 +7,8 @@
             type="{{ $type }}"
             name="{{ $name }}"
             id="{{ $name }}"
-            value="{{ old($name) }}"
+            {{ $attributes(["value" => old($name)]) }}
             autocomplete="{{ $autocomplete }}"
-            required
     >
 
     <x-form.error name="{{ $name }}"/>
