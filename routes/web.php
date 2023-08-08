@@ -1,8 +1,6 @@
 <?php
 
-use App\Services\Newsletter;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Validation\ValidationException;
 
 /*
 |--------------------------------------------------------------------------

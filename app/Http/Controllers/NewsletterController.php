@@ -16,7 +16,7 @@ class NewsletterController extends Controller
         $request->validate(["email" => "required|email"]);
 
         try {
-            (new Newsletter())->subscribe(request("email"));
+            resolve(Newsletter::class)->subscribe(request("email"));
         } catch (Exception $exception) {
             throw ValidationException::withMessages([
                 "email" => "This email could not be added to our newsletter list."
