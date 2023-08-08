@@ -28,9 +28,11 @@ Route::post("login", "SessionsController@store")->middleware("guest");
 
 Route::post("logout", "SessionsController@destroy")->middleware("auth");
 
-Route::get("admin/posts", "AdminPostController@index")->middleware("admin");
-Route::get("admin/posts/create", "AdminPostController@create")->middleware("admin");
-Route::get("admin/posts/{post}/edit", "AdminPostController@edit")->middleware("admin");
-Route::post("admin/posts", "AdminPostController@store")->middleware("admin");
-Route::patch("admin/posts/{id}", "AdminPostController@update")->middleware("admin");
-Route::delete("admin/posts/{id}", "AdminPostController@destroy")->middleware("admin");
+Route::middleware("can:admin")->group(function () {
+    Route::get("admin/posts", "AdminPostController@index");
+    Route::get("admin/posts/create", "AdminPostController@create");
+    Route::get("admin/posts/{post}/edit", "AdminPostController@edit");
+    Route::post("admin/posts", "AdminPostController@store");
+    Route::patch("admin/posts/{id}", "AdminPostController@update");
+    Route::delete("admin/posts/{id}", "AdminPostController@destroy");
+});
