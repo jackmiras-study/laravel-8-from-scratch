@@ -24,19 +24,10 @@ class AdminPostController extends Controller
 
     public function store(Request $request): Response
     {
-        $attributes = $request->validate([
-            "title" => "required",
-            "thumbnail" => "required|image",
-            "slug" => "required|unique:posts,slug",
-            "excerpt" => "required",
-            "body" => "required",
-            "category_id" => "required|exists:categories,id",
-        ]);
-
-        $attributes["user_id"] = auth()->id();
-        $attributes["thumbnail"] = $request->file("thumbnail")->store("thumbnails");
-
-        Post::create($attributes);
+        Post::create(array_merge($this->validatePost(), [
+            "user_id" => auth()->id(),
+            "thumbnail" => $request->file("thumbnail")->store("thumbnails"),
+        ]));
 
         return redirect("/");
     }
@@ -50,16 +41,14 @@ class AdminPostController extends Controller
 
     public function update(Request $request): Response
     {
-        $attributes = $request->validate([
-            "title" => "required",
-            "thumbnail" => "image",
-            "slug" => "required",
-            "excerpt" => "required",
-            "body" => "required",
-            "category_id" => "required|exists:categories,id",
-        ]);
+        $post = Post::find($request->id);
+        $attributes = $this->validatePost($post);
 
-        Post::find($request->id)->update($attributes);
+        if ($attributes["thumbnail"] ?? false) {
+            $attributes["thumbnail"] = $request->file("thumbnail")->store("thumbnails");
+        }
+
+        $post->update($attributes);
 
         return back()->with("success", "Post Updated");
     }
@@ -69,5 +58,18 @@ class AdminPostController extends Controller
         Post::find($request->id)->delete();
 
         return back()->with("success", "Post Deleted");
+    }
+
+    private function validatePost(Post $post = new Post()): array
+    {
+        return request()->validate([
+            "title" => "required",
+            "thumbnail" => $post->exists ? "image" : "required|image",
+            "slug" => $post->exists ? "required" : "required|unique:posts,slug",
+            "excerpt" => "required",
+            "body" => "required",
+            "category_id" => "required|exists:categories,id",
+        ]);
+
     }
 }
