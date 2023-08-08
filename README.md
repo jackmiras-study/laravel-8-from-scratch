@@ -1,66 +1,41 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Preface
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This project is an implementation of [Laravel 8 From Scratch](https://laracasts.com/series/laravel-8-from-scratch) from
+Laracasts.
 
-## About Laravel
+## Docker
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+All content related to how the Docker image was built can be found below.
+Be advised that inside **_infra/**, you will find Dockerfile and docker-compose.yml implementations using Alpine.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- [_infra/](_infra)
+- [_infra/Dockerfile](_infra/Dockerfile)
+- [_infra/docker-composer.yml](_infra/docker-compose.yml)
+- [_infra/configs/](_infra/configs/)
+- [.dockerignore](.dockerignore)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Vessel
+Vessel was written to expose short versions of commands that are used too often
+when debugging, developing code, and executing CI actions such as running
+linters, fix-linters, and tests.
 
-## Learning Laravel
+For example, without vessel the process of executing a Laravel command inside the container to create a model would be  something like `docker-compose exec -T app sh -c "cd /var/www/html && php artisan make:model User"` with vessel the same result can be achieved by executing `./vessel artisan make:model User`.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+Another good example of vessel usage would be the up command. With `./vessel up` the docker-compose.yml file will be built, but also the **xdebug.ini** file will be created with the right configurations and your current IP address to make the usage of Xdebug possible. If you choose to start the container by running `docker-compose up` bear in mind that Xdebug will not work.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### Available vessel commands
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-## Laravel Sponsors
-
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
-
-### Premium Partners
-
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
-
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+| Command                        | Description                                          |
+| ------------------------------ |------------------------------------------------------|
+| ./vessel up                    | Initialize docker-compose stack                      |
+| ./vessel down                  | Stop docker-compose stack                            |
+| ./vessel bash                  | Access bash of the app container                     |
+| ./vessel clean-all             | Prune all possible containers, volumes, and networks |
+| ./vessel artisan <ANY_COMMAND> | Run any Laravel artisan command                      |
+| ./vessel tinker                | Open a REPL for the Laravel framework                |
+| ./vessel composer              | Run any composer command                             |
+| ./vessel pest                  | Run test suite using Pest framework                  |
+| ./vessel tests                 | Run test suite with code coverage                    |
+| ./vessel linters               | Run linters                                          |
+| ./vessel fix-linters           | Run linter fixer                                     |
+| ./vessel update-dependencies   | Update composer dependencies                         |
